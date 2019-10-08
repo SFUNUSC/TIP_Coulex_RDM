@@ -22,6 +22,7 @@ private:
   G4UIdirectory             *ReactionDir;
   G4UIcmdWithADouble        *SetDCminCmd;
   G4UIcmdWithoutParameter   *RepDCminCmd;
+  G4UIcmdWithoutParameter   *UGACmd;
 };
 
 #endif

@@ -85,6 +85,7 @@ class Reaction : public G4VProcess
   G4int    GetNumberOfSimulatedReactions(){return sumProj;};
   void ReportDCmin(){printf("Minimum istnace of closest approach = %.2f fm\n",dcmin);};
   void SetDCmin(G4double d){dcmin=d;};
+  void SetUseGrazingAngle(){useGrazingAngle=true;};
   
   private:
   
@@ -102,6 +103,9 @@ class Reaction : public G4VProcess
   G4double GetKsi(G4double);
   G4double dfdOmega(G4double,G4double);
   G4double dfofTheta(G4double,vector<G4double>*);
+  double getDistClosestApproach(double);
+  double getMinGrazingAngle();
+  double getXSecBelowAngle(double,double);
  
   G4ThreeVector posIn;
   G4int ReactionFlag;
@@ -142,6 +146,8 @@ class Reaction : public G4VProcess
   G4bool ProjEx;
   G4double Ex1,Ex2;
   G4double DE,DEp;
+  G4double theg; //grazing angle
+  G4bool useGrazingAngle;
 
   G4Decay *decay; // standard decy
   //static Decay decay; // custom decay

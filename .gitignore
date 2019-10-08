@@ -1,7 +1,13 @@
 *~
 *.tar
+CMakeFiles
+CMakeCache.txt
+*.cmake
 *.root
 *.mca
+*.fmca
+*.par
+*parameters
 *.mac
 *.macro
 *.out

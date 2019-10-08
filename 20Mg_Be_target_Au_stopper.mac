@@ -1,4 +1,14 @@
 #
+# Uncomment for ball
+#
+/DetectorConstruction/UseCsIBall
+
+#
+# Initialize
+#
+/Run/Initialize
+
+#
 # Add HPGe detectors
 #
 /Griffin/addGriffinForward 16
@@ -47,12 +57,13 @@
 #
 # CsI array setup
 #
-/Results/CsI/SetLYResponse -1. 1.5 1000.
+#/Results/CsI/SetLYResponse -1. 1.5 1000.
 
 #
 # Reaction setup
 #
 #/Reaction/SetDCmin 11.415953
+/Reaction/UseGrazingAngle
 
 #
 # Output
@@ -68,9 +79,9 @@
 #
 # Run
 #
-/run/beamOn 10000
+/run/beamOn 11000
 
 #
 # Stuff to save
 #
-#/Results/Tree/Save run1.root
+/Results/Tree/Save run1_20Mgnograzing.root

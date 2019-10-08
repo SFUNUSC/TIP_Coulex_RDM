@@ -6,6 +6,7 @@ Reaction::Reaction(Projectile* Proj, Recoil* Rec, const G4String& aName)
 {
 
   dcmin=0.; // minimum allowed distance of closest approach
+  useGrazingAngle=false;
 
   reaction_here=false;
   if (verboseLevel>1) {
@@ -806,19 +807,19 @@ G4bool Reaction::SetupReactionProducts(const G4Track & aTrack,G4DynamicParticle*
       perpIn1.setY(dirIn.getX());
       perpIn1.setZ(0.);
       if(perpIn1.mag()==0.)
-	{
-	  perpIn1.setX(1.);
-	  perpIn1.setY(0.);
-	  perpIn1.setZ(0.);
-	  perpIn2.setX(0.);
-	  perpIn2.setY(1.);
-	  perpIn2.setZ(0.);
-	}
+        {
+          perpIn1.setX(1.);
+          perpIn1.setY(0.);
+          perpIn1.setZ(0.);
+          perpIn2.setX(0.);
+          perpIn2.setY(1.);
+          perpIn2.setZ(0.);
+        }
       else
-	{
-	  perpIn1.setMag(1.);
-	  perpIn2=dirIn.cross(perpIn1);
-	}
+        {
+          perpIn1.setMag(1.);
+          perpIn2=dirIn.cross(perpIn1);
+        }
       
       pdir=p_par1*dirIn+p_perp*cosp*perpIn1+p_perp*sinp*perpIn2;
       rdir=p_par2*dirIn-p_perp*cosp*perpIn1-p_perp*sinp*perpIn2;
@@ -865,11 +866,10 @@ G4bool Reaction::SetupReactionProducts(const G4Track & aTrack,G4DynamicParticle*
       theWeight=Eprime/EprimeFace*dfdOmega(ksi,theta)/dfofTheta(theta,&thefth);
       
       if(theWeight>0)
-      return TRUE;
+        return TRUE;
       
       return FALSE;
     }
-  
   else
     return FALSE;
 }
@@ -958,7 +958,8 @@ void Reaction::TargetFaceCrossSection()
   ksiFace=GetKsi(KE);
   c=4.819*A1/Z1/Z1/(1.+A1/A2)/(1.+A1/A2); // Eq. II C.17 the case of E2 with Z1 instead of Z2, see Sec. II A.6
   ce=c*(KE-DEp)*BE2;                      // Part of Eq. II C.15
-  
+  theg=getMinGrazingAngle(); //get the grazing angle
+
   //clear vectors needed
   thefth.clear();
   thbin.clear();
@@ -975,7 +976,14 @@ void Reaction::TargetFaceCrossSection()
 
   SetupLookupGenerator();
   sigmaFace=ce*thef; // Full Eq. II C.15, cross section on the target face in barns
-  printf("Target face cross section           :%10.4f b\n",sigmaFace);
+  printf("Target face cross section                     :%10.4f b\n",sigmaFace);
+  printf("Grazing angle                                 :%7.1f    deg\n",theg);
+  printf("Target face cross section below grazing angle :%10.4f b\n",getXSecBelowAngle(theg,ce));
+
+  if(useGrazingAngle){
+    printf("Restricting events which fall above the grazing angle.\n");
+    dcmin = 1.2*(pow(A1,1/3.) + pow(A2,1/3.) );
+  }
 
   proj=G4IonTable::GetIonTable()->GetIon(Z1,A1,Ex1);
   rec=G4IonTable::GetIonTable()->GetIon(Z2,A2,Ex2);
@@ -1271,3 +1279,33 @@ void Reaction::Calcfthksi(G4double ksi,vector<G4double>* fth)
   //   G4cout<<(*it)<<G4endl;
   // getc(stdin);
 }
+//---------------------------------------------------------
+double Reaction::getDistClosestApproach(double thetaCMDeg){
+  return 0.5 * AHC * Z1 * Z2 / theProjectile->getKE() * (1 + A1 / A2) * (1 + 1 / sin(0.5 * thetaCMDeg * DEG2RAD));
+}
+//---------------------------------------------------------
+double Reaction::getMinGrazingAngle(){
+  double angleCM=0.5;
+  double step=0.1;
+  double grazingDist=1.2*(pow(A1,1/3.) + pow(A2,1/3.) );
+  while(angleCM<180.0){
+    if(getDistClosestApproach(angleCM) < grazingDist)
+      break;
+    angleCM+=step;
+  }
+  return angleCM;
+}
+//---------------------------------------------------------
+double Reaction::getXSecBelowAngle(double thetaDeg, double ce){
+  double xsec=0.;
+  double angleCM=0.0;
+  double step=0.1;
+  while(angleCM<thetaDeg){
+    double solidAng = (cos(angleCM*DEG2RAD) - cos((angleCM+step)*DEG2RAD))*TWOPI;
+    xsec += dfdOmega(ksiFace, (angleCM+(step/2.))) * solidAng;
+    angleCM+=step;
+  }
+  xsec *= ce;
+  return xsec;
+}
+

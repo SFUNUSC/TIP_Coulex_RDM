@@ -46,7 +46,7 @@
 /Plunger/Stopper/Material G4_Au
 /Plunger/Stopper/Thickness 5.0 um
 /Plunger/Stopper/NStep 1
-/Plunger/Separation 20 um
+/Plunger/Separation 30 um
 
 #
 # Equipment shifts
@@ -79,7 +79,7 @@
 #
 # Run
 #
-/run/beamOn 11000
+/run/beamOn 8776
 
 #
 # Stuff to save

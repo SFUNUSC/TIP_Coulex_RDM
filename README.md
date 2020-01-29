@@ -1,7 +1,5 @@
 # TIP Coulex-RDM Geant4 code
 
-Maintainer: Aaron Chester
-
 ## Description
 
 GEANT4 code implementing TIP/TIGRESS RDM using a single-step Coulex.
@@ -35,6 +33,8 @@ source $G4INSTALL/bin/geant4.sh
 source $G4INSTALL/share/GEANT4_VERSION/geant4make/geant4make.sh
 ```
 
+This program requires secret files describing the GRIFFIN geometry.  After obtaining these files from a collaborator, copy them to the `src` directory.
+
 The program is then compiled from source using the following commands (substituting the appropriate directories):
 
 ```
@@ -67,7 +67,9 @@ G4Decay (from GEANT4.10.3) - modified to suppress warnings.
 
 ## Acknowledgements
 
-J. Willaims - Compatibility with Geant4 v10.x, CsI ball implementation 
+A. Chester - Original implementation of Coulex and RDM.
+
+J. Williams - Compatibility with Geant4 v10.x, CsI ball implementation. 
 
 T. Ma - CsI ball code.
 

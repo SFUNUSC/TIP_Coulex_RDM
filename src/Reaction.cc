@@ -976,9 +976,10 @@ void Reaction::TargetFaceCrossSection()
 
   SetupLookupGenerator();
   sigmaFace=ce*thef; // Full Eq. II C.15, cross section on the target face in barns
+  sigmaFaceGrazing=getXSecBelowAngle(theg,ce);
   printf("Target face cross section                     :%10.4f b\n",sigmaFace);
   printf("Grazing angle                                 :%7.1f    deg\n",theg);
-  printf("Target face cross section below grazing angle :%10.4f b\n",getXSecBelowAngle(theg,ce));
+  printf("Target face cross section below grazing angle :%10.4f b\n",sigmaFaceGrazing);
 
   if(useGrazingAngle){
     printf("Restricting events which fall above the grazing angle.\n");

@@ -80,12 +80,15 @@ class Reaction : public G4VProcess
   G4int  getTargetRecoilA(){return A2;};
   G4int  getTargetRecoilZ(){return Z2;};
   G4double GetTargetFaceCrossSection(){return sigmaFace;};// in barns
+  G4double GetTargetFaceCrossSectionGrazing(){return sigmaFaceGrazing;};// in barns
   G4double GetThickTargetCorrection(){return sumWeights/sumProj;};
   G4double GetThickTargetCrossSection(){return sumWeights/sumProj*sigmaFace;};// in barns
+  G4double GetThickTargetCrossSectionGrazing(){return sumWeights/sumProj*sigmaFaceGrazing;};// in barns
   G4int    GetNumberOfSimulatedReactions(){return sumProj;};
   void ReportDCmin(){printf("Minimum istnace of closest approach = %.2f fm\n",dcmin);};
   void SetDCmin(G4double d){dcmin=d;};
   void SetUseGrazingAngle(){useGrazingAngle=true;};
+  G4bool GetUseGrazingAngle(){return useGrazingAngle;};
   
   private:
   
@@ -138,6 +141,7 @@ class Reaction : public G4VProcess
   vector<G4int> thlookup;
   G4double thef;
   G4double sigmaFace;
+  G4double sigmaFaceGrazing;
   G4double sumWeights;
   G4int    sumProj;
   G4double ksiFace;

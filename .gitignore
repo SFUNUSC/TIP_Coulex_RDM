@@ -26,3 +26,6 @@ sed*
 tree2mca_parameter*
 TIP_Coulex_RDM
 tree2mca*
+DetectionSystemGriffinSuppressed.cc
+DetectorConstructionSuppressed.cc
+*.macro
